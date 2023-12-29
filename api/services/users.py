@@ -8,22 +8,25 @@ from werkzeug.security import generate_password_hash
 from api import db
 from api.models import User
 
-# def abort_if_user_not_found(func):
-#     def new_func(user_id, *args, **kwargs):
-#         user = db.session.query(User).get(user_id)
-#         if not user:
-#             abort(404, success=False, message=f"User {user_id} not found")
-#         return func(*args, user_id, **kwargs)
-#     return new_func
 from api.models.users import Roles
 from api.services.auth import get_token
+
+
+def abort_if_user_not_found(func):
+    def new_func(user_id, *args, **kwargs):
+        user = db.session.query(User).get(user_id)
+        if not user:
+            abort(404, success=False, message=f"User {user_id} not found")
+        return func(*args, user_id, **kwargs)
+
+    return new_func
 
 
 def user_access_level(role: Roles):
     def decorator(func):
         def new_func(*args, **kwargs):
             if g.current_user.role < role:
-                abort(403, success=False)
+                abort(404, success=False)
             return func(*args, **kwargs)
         return new_func
     return decorator

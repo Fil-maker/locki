@@ -36,3 +36,6 @@ def log_out():
 @token_auth.login_required
 def get_myself():
     return jsonify({"success": True, "user": g.current_user.to_dict()})
+
+# @app.route("/api/libraries/<int:library_id>/add_user/<int:user_id>")
+# def add_user_to_library(library_id, user_id):

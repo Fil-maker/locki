@@ -36,7 +36,8 @@ class Expression:
             self.op = op
 
     def is_ready(self):
-        return ((self.n1 and self.n2 is None and self.op is None) or (self.n1 and self.n2 and self.op)) and (not self.brackets or self.closed)
+        return ((self.n1 and self.n2 is None and self.op is None) or (self.n1 and self.n2 and self.op)) and (
+                not self.brackets or self.closed)
 
     def is_part(self):
         return self.n1 is not None and self.n2 is not None and self.op is not None
@@ -49,7 +50,7 @@ class Expression:
         raise SyntaxError
 
 
-def proceed_stack(num, op=None, br_op=False, br_cl=False):
+def proceed_stack(stack, num, op=None, br_op=False, br_cl=False):
     if not stack:
         stack.append(Expression(n1=num, op=op, br=br_op))
         return
@@ -64,13 +65,13 @@ def proceed_stack(num, op=None, br_op=False, br_cl=False):
                 if expr.brackets and not expr.closed:
                     expr.closed = True
                     break
-            proceed_stack(None)
+            proceed_stack(stack, None)
         elif top.is_ready():
             res = top.n1
             if top.is_part():
                 res = top.calculate()
             stack.pop()
-            proceed_stack(res, op)
+            proceed_stack(stack, res, op)
 
 
 def parse_arg(let_stack: str, liter: dict[str, float] = {}):
@@ -81,13 +82,8 @@ def parse_arg(let_stack: str, liter: dict[str, float] = {}):
     return liter[let_stack]
 
 
-if __name__ == '__main__':
-    # ввод выражения без пробелов
-    expr = "1+1*3"
+def solve_expr(expr: str, vars: dict[str, int] = None):
     expr = expr.replace(" ", "")
-    # Ввод переменных
-    vars = {"a": 2}
-
     stack: list[Expression] = []
     n_stack = ""
     for l in expr:
@@ -95,19 +91,28 @@ if __name__ == '__main__':
             n_stack += l
         else:
             if l == "(":
-                proceed_stack(None, br_op=True)
+                proceed_stack(stack, None, br_op=True)
             elif l == ")":
                 number = parse_arg(n_stack, liter=vars)
-                proceed_stack(number, br_cl=True)
+                proceed_stack(stack, number, br_cl=True)
                 n_stack = ""
             else:
                 if n_stack:
                     number = parse_arg(n_stack, liter=vars)
-                    proceed_stack(number, l)
+                    proceed_stack(stack, number, l)
                 else:
-                    proceed_stack(None, l)
+                    proceed_stack(stack, None, l)
                 n_stack = ""
     if n_stack:
         number = parse_arg(n_stack, liter=vars)
-        proceed_stack(number)
+        proceed_stack(stack, number)
     print(stack[-1].n1)
+    return stack[-1].n1
+
+
+if __name__ == '__main__':
+    # ввод выражения без пробелов
+    expr = "1+1*3"
+    # Ввод переменных
+    vars = {"a": 2}
+    solve_expr(expr, vars)

@@ -30,7 +30,7 @@ class UserListResource(Resource):
         try:
             user, token, expires = create_user(**kwargs)
         except KeyError as e:
-            return jsonify({"success": False, "message": str(e)}), 400
+            return {"success": False, "message": str(e)}, 400
         else:
             return jsonify({"success": True, "user": user.to_dict(),
                             "authToken": {"token": token,
