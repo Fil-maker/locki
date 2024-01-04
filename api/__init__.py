@@ -41,7 +41,7 @@ api.add_resource(DocumentResource, "/api/documents/<int:document_id>")
 api.add_resource(DocumentListResource, "/api/documents")
 
 from api.resources.articles import ArticleResource, ArticleListResource
-api.add_resource(ArticleResource, "/api/articles/<int:articles_id>")
+api.add_resource(ArticleResource, "/api/articles/<int:article_id>")
 api.add_resource(ArticleListResource, "/api/articles")
 
 

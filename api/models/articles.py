@@ -6,7 +6,7 @@ class Article(db.Model, ISO8601SerializerMixin):
     __tablename__ = "articles"
 
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    order_num = db.Column(db.Integer())
+    order_num = db.Column(db.Integer(), default=0)
     article_type = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(128), nullable=False)
     content = db.Column(db.String(1024), nullable=False)

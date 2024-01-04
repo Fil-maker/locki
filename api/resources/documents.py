@@ -2,7 +2,7 @@ from flask import jsonify
 from flask_restful import Resource, abort
 from flask_restful.reqparse import RequestParser
 
-from api.services.documents import get_document, create_document
+from api.services.documents import get_document, create_document, delete_document
 
 
 class DocumentResource(Resource):
@@ -11,6 +11,9 @@ class DocumentResource(Resource):
         if document is None:
             abort(404, success=False, message=f"Документ {document_id} не найден")
         return jsonify({"success": True, "document": document})
+
+    def delete(self, document_id):
+        return delete_document(document_id)
 
 
 class DocumentListResource(Resource):

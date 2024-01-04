@@ -12,17 +12,21 @@ def get_library(library_id=None, to_dict=True):
     return [item.to_dict() if to_dict else item for item in db.session.query(Library).all()]
 
 
-def delete_library(library_id=None, to_dict=True):
+def delete_library(library_id=None):
     if library_id is not None:
         library: Library = db.session.query(Library).get(library_id)
         if library is None:
             return None
         for association in library.users:
             db.session.delete(association)
+        for document in library.documents:
+            for article in document.articles:
+                db.session.delete(article)
+            db.session.delete(document)
         db.session.delete(library)
         db.session.commit()
         return {"status": 200, "success": True}
-    return {"status": 400, "success": True}, 400
+    return {"status": 404, "success": True}, 404
 
 
 def create_library(name, user_id):

@@ -47,5 +47,5 @@ class User(db.Model, ISO8601SerializerMixin):
             return super(User, self).to_dict(*args, **kwargs)
         response = super(User, self).to_dict(*args, **kwargs, only=["id", "username", "first_name", "last_name",
                                                                 "created_on", "role"])
-        response["libraries"] = [(association.id, association.role) for association in self.libraries]
+        response["libraries"] = [(association.library.id, association.role) for association in self.libraries]
         return response

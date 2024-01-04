@@ -6,7 +6,7 @@ OPERATIONS = {
     "/": operator.truediv,
     "*": operator.mul,
     "^": operator.pow,
-    None: lambda x, y: x
+    # None: lambda x, y: x
 
 }
 HIGH_PRIORITY = "/*^"
@@ -75,7 +75,7 @@ def proceed_stack(stack, num, op=None, br_op=False, br_cl=False):
 
 
 def parse_arg(let_stack: str, liter: dict[str, float] = {}):
-    if let_stack.replace(".", '').isdecimal():
+    if let_stack.replace(".", '').isdecimal() and let_stack.count(".") <= 1:
         return float(let_stack)
     if liter.get(let_stack, None) is None:
         raise SyntaxError
@@ -106,13 +106,32 @@ def solve_expr(expr: str, vars: dict[str, int] = None):
     if n_stack:
         number = parse_arg(n_stack, liter=vars)
         proceed_stack(stack, number)
-    print(stack[-1].n1)
-    return stack[-1].n1
+    # print(stack[-1].n1)
+    return float(stack[-1].n1)
+
+
+def get_vars_list(expr: str):
+    expr = expr.replace(" ", "")
+    n_stack = ""
+    vars = set()
+    for l in expr:
+        if l.isdecimal() or l == '.' or l.isalpha():
+            n_stack += l
+        else:
+            print(1)
+            if not (n_stack.replace(".", '').isdecimal() and n_stack.count(".") <= 1):
+                # if n_stack not in vars:
+                vars.add(n_stack)
+            n_stack = ""
+    if not (n_stack.replace(".", '').isdecimal() and n_stack.count(".") <= 1):
+        vars.add(n_stack)
+    return list(vars)
 
 
 if __name__ == '__main__':
+    pass
     # ввод выражения без пробелов
-    expr = "1+1*3"
-    # Ввод переменных
-    vars = {"a": 2}
-    solve_expr(expr, vars)
+    # expr = "2*(1+3)*2"
+    # # Ввод переменных
+    # vars = {"a": 2}
+    # solve_expr(expr, vars)
