@@ -32,9 +32,9 @@ class Library(db.Model, ISO8601SerializerMixin):
         if "only" in kwargs:
             return super(Library, self).to_dict(*args, **kwargs)
         response = super(Library, self).to_dict(*args, **kwargs, only=["id", "name"])
-        response["users"] = [{"user": user.user.to_dict(),
+        response["users"] = [{"user": user.user.id,
                               "role": user.role,
                               "edit_rights": user.edit_rights} for user
                              in self.users]
-        response["documents"] = [1 for i in self.documents]
+        response["documents"] = [doc.to_dict() for doc in self.documents]
         return response
