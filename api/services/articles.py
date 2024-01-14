@@ -37,6 +37,7 @@ def create_article(name, article_type, content, user_id, library_id, document_id
         raise KeyError(f"Документ должен существовать")
     if document.author.id != user.id:
         raise KeyError(f"Вы не автор статьи")
+    print(document.articles, document.articles is None)
     indexes = map(lambda a: a.order_num, document.articles)
     article = Article()
     article.author = user
@@ -44,7 +45,7 @@ def create_article(name, article_type, content, user_id, library_id, document_id
     article.name = name
     article.article_type = article_type
     article.content = content
-    article.order_num = max(indexes) + 1
+    article.order_num = max(indexes, default=-1) + 1
     document.articles.append(article)
 
     db.session.add(article)
