@@ -20,6 +20,7 @@ pg_pass = os.environ.get("PG_PASS")
 pg_host = os.environ.get("PG_HOST")
 db_name = os.environ.get("DB_NAME")
 app.config["SECRET_KEY"] = os.environ.get("API_SECRET")
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}
 app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{pg_user}:{pg_pass}@{pg_host}/{db_name}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app, session_options={"autoflush": False})
