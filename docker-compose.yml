@@ -14,7 +14,6 @@ services:
       - PG_USER=postgres
       - PG_PASS=postgres
       - DB_NAME=postgres
-
     restart: on-failure
     volumes:
       - ./api:/api/api
@@ -25,13 +24,14 @@ services:
     command: gunicorn -b 0.0.0.0:5000 -w 4 api_runner:app --reload
   db_locki:
       container_name: db_locki
-      image: postgres:12
+      image: postgres:16
       ports:
         - "5432:5432"
       environment:
         - POSTGRES_PASSWORD=postgres
         - POSTGRES_USER=postgres
         - POSTGRES_DB=postgres
+      restart: on-failure
       volumes:
         - pgdata:/var/lib/postgresql/data
 

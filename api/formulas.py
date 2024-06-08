@@ -74,7 +74,7 @@ def proceed_stack(stack, num, op=None, br_op=False, br_cl=False):
             proceed_stack(stack, res, op)
 
 
-def parse_arg(let_stack: str, liter: dict[str, float] = {}):
+def parse_arg(let_stack: str, liter):
     if let_stack.replace(".", '').isdecimal() and let_stack.count(".") <= 1:
         return float(let_stack)
     if liter.get(let_stack, None) is None:
@@ -82,7 +82,7 @@ def parse_arg(let_stack: str, liter: dict[str, float] = {}):
     return liter[let_stack]
 
 
-def solve_expr(expr: str, vars: dict[str, int] = None):
+def solve_expr(expr: str, vars):
     expr = expr.replace(" ", "")
     stack: list[Expression] = []
     n_stack = ""
